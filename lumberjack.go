@@ -168,6 +168,15 @@ func (l *Logger) close() error {
 	return err
 }
 
+// Sync commits the current contents of the file to stable storage.
+// Typically, this means flushing the file system's in-memory copy
+// of recently written data to disk.
+func (l *Logger) Sync() error {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+	return l.file.Sync()
+}
+
 // Rotate causes Logger to close the existing log file and immediately create a
 // new one.  This is a helper function for applications that want to initiate
 // rotations outside of the normal rotation rules, such as in response to
